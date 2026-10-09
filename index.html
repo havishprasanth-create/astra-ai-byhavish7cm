@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astra AI</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 25px;
+      background: #151d35;
+      font-size: 28px;
+      font-weight: bold;
+      color: #80d8ff;
+    }
+
+    #chat {
+      max-width: 650px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+
+    #messages {
+      height: 350px;
+      overflow-y: auto;
+      background: #151d35;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: left;
+    }
+
+    .message {
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 10px;
+      background: #263453;
+      overflow-wrap: anywhere;
+    }
+
+    .user {
+      background: #174c70;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #55c8ff;
+      color: #08111f;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    footer {
+      color: #aab5d0;
+      font-size: 12px;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>✦ ASTRA AI</header>
+
+  <main id="chat">
+    <h2>Your AI Assistant</h2>
+    <p>Ask me something!</p>
+
+    <div id="messages" aria-live="polite">
+      <div class="message">
+        <b>Astra:</b> Hello! I'm Astra AI. How can I help you?
+      </div>
+    </div>
+
+    <div class="controls">
+      <input id="question" placeholder="Message Astra..."
+             aria-label="Your message">
+      <button id="send">Send</button>
+    </div>
+  </main>
+
+  <footer>Astra AI · Your ideas, beyond the stars ✨</footer>
+
+  <script>
+    const input = document.getElementById("question");
+    const messages = document.getElementById("messages");
+
+    function reply() {
+      const question = input.value.trim();
+      if (!question) return;
+
+      addMessage("You", question, true);
+      input.value = "";
+
+      const q = question.toLowerCase();
+      let answer;
+
+      if (q.includes("hello") || q.includes("hi")) {
+        answer = "Hello! Welcome to Astra AI! 🚀";
+      } else if (q.includes("your name")) {
+        answer = "I'm Astra AI, your digital assistant!";
+      } else if (q.includes("space")) {
+        answer = "Space contains stars, planets, moons and galaxies!";
+      } else if (q.includes("html")) {
+        answer = "HTML is used to structure webpages.";
+      } else if (q.includes("help")) {
+        answer = "Sure! Tell me what you need help with.";
+      } else {
+        answer = "I'm still learning! This is my demo version. A real AI brain needs an AI service connected securely.";
+      }
+
+      addMessage("Astra", answer, false);
+    }
+
+    function addMessage(name, text, isUser) {
+      const div = document.createElement("div");
+      div.className = "message" + (isUser ? " user" : "");
+
+      const bold = document.createElement("b");
+      bold.textContent = name + ": ";
+
+      div.appendChild(bold);
+      div.appendChild(document.createTextNode(text));
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    document.getElementById("send").addEventListener("click", reply);
+
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") reply();
+    });
+  </script>
+</body>
+</html>
