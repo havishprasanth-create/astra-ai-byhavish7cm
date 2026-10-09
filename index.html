@@ -1,158 +1,400 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Astra AI</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: white;
-      text-align: center;
-    }
-
-    header {
-      padding: 25px;
-      background: #151d35;
-      font-size: 28px;
-      font-weight: bold;
-      color: #80d8ff;
-    }
-
-    #chat {
-      max-width: 650px;
-      margin: 25px auto;
-      padding: 15px;
-    }
-
-    #messages {
-      height: 350px;
-      overflow-y: auto;
-      background: #151d35;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: left;
-    }
-
-    .message {
-      margin: 12px 0;
-      padding: 12px;
-      border-radius: 10px;
-      background: #263453;
-      overflow-wrap: anywhere;
-    }
-
-    .user {
-      background: #174c70;
-    }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    input {
-      flex: 1;
-      min-width: 0;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      background: #55c8ff;
-      color: #08111f;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    footer {
-      color: #aab5d0;
-      font-size: 12px;
-      padding: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra AI — Your AI Universe</title>
+<style>
+:root {
+  --bg:#0b0d12; --panel:#11141c; --line:#252a36;
+  --text:#f5f7ff; --muted:#959caf; --blue:#8c8aff;
+  --purple:#c09bff; --green:#8ce8c0;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+}
+button,input,textarea,select { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,input:focus-visible,textarea:focus-visible {
+  outline:2px solid var(--blue); outline-offset:3px;
+}
+.app { display:flex; min-height:100vh; }
+.sidebar {
+  width:245px; flex-shrink:0; background:#0e1017;
+  border-right:1px solid var(--line); padding:20px 14px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.brand { display:flex; gap:10px; align-items:center;
+  padding:5px 8px 20px; font-size:21px; font-weight:800;
+  letter-spacing:-.8px; }
+.logo {
+  width:35px;height:35px;border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#8e88ff,#d3a5ff);
+  color:#141321;font-size:21px;
+}
+.new-chat,.nav-btn,.account-btn {
+  width:100%; text-align:left; padding:11px 12px;
+  color:#c6cada; border:1px solid transparent;
+  border-radius:10px;background:transparent;
+}
+.new-chat { border-color:#333749; color:white; }
+.nav-btn:hover,.nav-btn.active,.account-btn:hover {
+  background:#1c202c;color:white;
+}
+.section-label { color:#747b91;font-size:11px;
+  letter-spacing:1.4px;padding:8px 12px 0; }
+.history { color:#8d94a8;font-size:13px;padding:8px 12px; }
+.sidebar-bottom { margin-top:auto; }
+.main { flex:1; min-width:0; }
+.topbar {
+  height:67px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;gap:10px;
+}
+.model { border:1px solid var(--line);border-radius:9px;
+  padding:8px 11px;color:#ddd;background:#151822; }
+.top-actions { display:flex;gap:9px;align-items:center; }
+.small-btn,.primary,.secondary {
+  border:1px solid var(--line);border-radius:10px;
+  padding:10px 15px;background:#191d28;color:white;
+}
+.primary {
+  color:#11111b;border:0;font-weight:750;
+  background:linear-gradient(110deg,#a6a0ff,#d5b4ff);
+}
+.primary:hover { filter:brightness(1.1); }
+.content { max-width:1000px;margin:auto;padding:34px 25px 50px; }
+.page { display:none; }
+.page.active { display:block; }
+.hero { text-align:center;padding:8vh 0 26px; }
+.eyebrow { color:#b8a9ff;font-size:12px;letter-spacing:2px;
+  text-transform:uppercase; }
+h1 { font-size:clamp(32px,5vw,49px);letter-spacing:-2px;
+  line-height:1.15;margin:13px 0; }
+.gradient {
+  background:linear-gradient(100deg,#aaa2ff,#e0b8ff,#92d9ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sub { color:var(--muted);max-width:550px;margin:0 auto; }
+.composer {
+  border:1px solid #35384a;background:#151821;border-radius:19px;
+  padding:13px;margin:24px auto 15px;max-width:760px;
+  box-shadow:0 12px 60px #0005;
+}
+.composer textarea {
+  resize:vertical;min-height:76px;max-height:220px;
+  width:100%;border:0;outline:0;background:transparent;
+  color:white;padding:7px 8px;
+}
+.composer-bottom {display:flex;justify-content:space-between;
+  align-items:center;gap:8px;}
+.muted {color:var(--muted);font-size:12px;}
+.pills {display:flex;flex-wrap:wrap;justify-content:center;
+  gap:9px;margin:17px auto 25px;}
+.pill {border:1px solid var(--line);border-radius:99px;
+  background:#141721;color:#c3c8d8;padding:9px 13px;}
+.pill:hover {border-color:#8984ff;}
+.messages {max-width:760px;margin:10px auto 20px; }
+.msg {padding:15px 17px;border-radius:14px;margin:13px 0;
+  white-space:pre-wrap;overflow-wrap:anywhere;}
+.msg.user {background:#24283a;margin-left:12%;}
+.msg.bot {background:#131721;border:1px solid #282d3a;}
+.msg strong {color:#c4baff;}
+.disclaimer {text-align:center;color:#70778b;font-size:11px;margin:15px;}
+.page-heading {margin:15px 0 25px;}
+.page-heading h1 {font-size:34px;letter-spacing:-1px;}
+.page-heading p {color:var(--muted);}
+.grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;}
+.card {
+  border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(150deg,#171a25,#10121a);
+  padding:20px;min-width:0;
+}
+.card h3 {margin:9px 0 5px;}
+.card p {color:var(--muted);font-size:13px;}
+.card-icon {font-size:26px;}
+.card button {margin-top:12px;}
+.field {width:100%;background:#0d1017;border:1px solid #303548;
+  border-radius:10px;padding:12px;color:white;margin:6px 0 14px;}
+label {font-size:13px;color:#c6cad8;}
+.art-preview {
+  min-height:190px;border:1px solid #37334f;border-radius:13px;
+  margin:16px 0;padding:20px;display:grid;place-items:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse at 30% 30%,#514d9d,#252347 35%,#111522 75%);
+}
+.art-symbol {font-size:65px;filter:drop-shadow(0 0 20px #c6b5ff);}
+.price {font-size:32px;font-weight:800;margin:12px 0;}
+.price small {font-size:12px;color:var(--muted);font-weight:400;}
+ul.features {list-style:none;padding:0;color:#c3c8d8;font-size:13px;}
+ul.features li {padding:7px 0;}
+ul.features li::before {content:"✓ ";color:var(--green);}
+.card .full {width:100%;}
+.tag {font-size:11px;border:1px solid #45405e;color:#c9baff;
+  padding:4px 8px;border-radius:30px;}
+.note {border:1px solid #3b3653;background:#1a1729;
+  color:#c7c0e5;padding:12px 14px;border-radius:10px;
+  font-size:13px;margin:15px 0;}
+footer {text-align:center;color:#626a7d;font-size:11px;padding:25px;}
+#toast {position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#e0d8ff;color:#151320;border-radius:10px;
+  padding:12px 18px;display:none;z-index:10;max-width:90%;}
+@media(max-width:750px) {
+ .sidebar {width:65px;padding:15px 7px;align-items:center;}
+ .brand {padding:4px 0 15px;font-size:0;}
+ .logo {flex-shrink:0;}
+ .new-chat,.nav-btn,.account-btn {text-align:center;padding:12px 4px;
+   font-size:0;}
+ .new-chat::first-letter,.nav-btn::first-letter {font-size:18px;}
+ .section-label,.history {display:none;}
+ .grid {grid-template-columns:1fr;}
+ .topbar {padding:0 12px;}
+ .content {padding:22px 14px;}
+ .hero {padding-top:5vh;}
+ .top-actions .secondary {display:none;}
+}
+</style>
 </head>
-
 <body>
-  <header>✦ ASTRA AI</header>
+<div class="app">
+ <aside class="sidebar">
+  <div class="brand"><span class="logo">✦</span> ASTRA AI</div>
+  <button class="new-chat" onclick="newChat()">＋ &nbsp; New chat</button>
+  <button class="nav-btn active" data-page="chat" onclick="go('chat')">◉ &nbsp; AI Chat</button>
+  <button class="nav-btn" data-page="create" onclick="go('create')">✧ &nbsp; Create images</button>
+  <button class="nav-btn" data-page="library" onclick="go('library')">▤ &nbsp; Library</button>
+  <div class="section-label">YOUR WORKSPACE</div>
+  <button class="nav-btn" data-page="tools" onclick="go('tools')">⌘ &nbsp; AI tools</button>
+  <button class="nav-btn" data-page="plans" onclick="go('plans')">◇ &nbsp; Plans & pricing</button>
+  <div class="section-label">RECENT CHATS</div>
+  <div id="history" class="history">Your chats will appear here.</div>
+  <div class="sidebar-bottom">
+   <button class="account-btn" onclick="go('login')">♙ &nbsp; Sign in / Account</button>
+  </div>
+ </aside>
 
-  <main id="chat">
-    <h2>Your AI Assistant</h2>
-    <p>Ask me something!</p>
+ <main class="main">
+  <header class="topbar">
+   <select class="model" aria-label="AI model" id="model">
+    <option>Astra AI</option><option>Astra Creative</option>
+   </select>
+   <div class="top-actions">
+    <button class="secondary" onclick="go('plans')">View plans</button>
+    <button class="primary" onclick="go('login')">Sign in</button>
+   </div>
+  </header>
 
-    <div id="messages" aria-live="polite">
-      <div class="message">
-        <b>Astra:</b> Hello! I'm Astra AI. How can I help you?
-      </div>
+  <div class="content">
+   <section class="page active" id="page-chat">
+    <div class="hero" id="welcome">
+     <div class="eyebrow">✦ YOUR PERSONAL AI UNIVERSE</div>
+     <h1>What can I help<br>you <span class="gradient">discover?</span></h1>
+     <p class="sub">Think bigger. Create freely. Turn your ideas into something extraordinary.</p>
     </div>
-
-    <div class="controls">
-      <input id="question" placeholder="Message Astra..."
-             aria-label="Your message">
-      <button id="send">Send</button>
+    <div class="messages" id="messages" aria-live="polite"></div>
+    <div class="composer">
+     <textarea id="question" placeholder="Ask Astra anything..." aria-label="Message Astra"></textarea>
+     <div class="composer-bottom">
+      <span class="muted">✦ Your ideas start here</span>
+      <button class="primary" onclick="sendMessage()">Send ↗</button>
+     </div>
     </div>
-  </main>
+    <div class="pills">
+     <button class="pill" onclick="suggest('Explain black holes simply')">✦ Explain something</button>
+     <button class="pill" onclick="go('create')">🎨 Create an image</button>
+     <button class="pill" onclick="suggest('Help me write a story')">✎ Write a story</button>
+     <button class="pill" onclick="go('tools')">⌘ Explore tools</button>
+    </div>
+    <div class="disclaimer">Astra demo · Answers in this version are generated from simple built-in examples.</div>
+   </section>
 
-  <footer>Astra AI · Your ideas, beyond the stars ✨</footer>
+   <section class="page" id="page-create">
+    <div class="page-heading">
+     <div class="eyebrow">ASTRA CREATIVE STUDIO</div>
+     <h1>Create something <span class="gradient">amazing.</span></h1>
+     <p>Describe the image you imagine.</p>
+    </div>
+    <div class="card">
+     <label for="prompt">IMAGE PROMPT</label>
+     <textarea class="field" id="prompt" rows="3" placeholder="A glowing futuristic city above the clouds, cinematic lighting..."></textarea>
+     <label for="style">ART STYLE</label>
+     <select class="field" id="style">
+      <option>Dreamlike digital art</option><option>Photorealistic</option>
+      <option>Anime</option><option>3D illustration</option><option>Watercolour</option>
+     </select>
+     <button class="primary" onclick="createImage()">✧ Generate preview</button>
+     <div class="art-preview" id="art">
+      <div><div class="art-symbol">✧</div><p class="muted">Your creative canvas awaits</p></div>
+     </div>
+     <p class="muted">This preview is a visual demo. Connect an image-generation API to create actual images.</p>
+    </div>
+   </section>
 
-  <script>
-    const input = document.getElementById("question");
-    const messages = document.getElementById("messages");
+   <section class="page" id="page-library">
+    <div class="page-heading"><h1>Your <span class="gradient">Library</span></h1>
+     <p>Your saved work can live here when storage and accounts are connected.</p></div>
+    <div class="grid">
+     <div class="card"><div class="card-icon">💬</div><h3>Conversations</h3><p>Start a chat and explore ideas.</p><button class="secondary" onclick="go('chat')">Open chat</button></div>
+     <div class="card"><div class="card-icon">🎨</div><h3>Creative studio</h3><p>Try an image prompt.</p><button class="secondary" onclick="go('create')">Create</button></div>
+     <div class="card"><div class="card-icon">📁</div><h3>Your files</h3><p>File storage can be added with an account service.</p></div>
+    </div>
+   </section>
 
-    function reply() {
-      const question = input.value.trim();
-      if (!question) return;
+   <section class="page" id="page-tools">
+    <div class="page-heading"><div class="eyebrow">YOUR AI TOOLBOX</div>
+     <h1>One place. <span class="gradient">Endless ideas.</span></h1>
+     <p>Choose a tool to get started.</p></div>
+    <div class="grid">
+     <div class="card"><div class="card-icon">💬</div><h3>AI Chat</h3><p>Brainstorm, learn, and ask questions.</p><button class="secondary" onclick="go('chat')">Open tool ↗</button></div>
+     <div class="card"><div class="card-icon">🎨</div><h3>Image Creator</h3><p>Turn written ideas into visual concepts.</p><button class="secondary" onclick="go('create')">Open tool ↗</button></div>
+     <div class="card"><div class="card-icon">✍️</div><h3>Writing Assistant</h3><p>Plan essays, stories, and messages.</p><button class="secondary" onclick="suggest('Help me write a short creative story')">Try it ↗</button></div>
+     <div class="card"><div class="card-icon">💻</div><h3>Coding Helper</h3><p>Explore HTML, JavaScript, and programming ideas.</p><button class="secondary" onclick="suggest('Teach me a beginner HTML example')">Try it ↗</button></div>
+     <div class="card"><div class="card-icon">📚</div><h3>Study Buddy</h3><p>Break down difficult topics into easy steps.</p><button class="secondary" onclick="suggest('Help me study effectively')">Try it ↗</button></div>
+     <div class="card"><div class="card-icon">🎙️</div><h3>Voice & Files</h3><p>Can be connected to speech and file-processing services.</p><span class="tag">Coming soon</span></div>
+    </div>
+   </section>
 
-      addMessage("You", question, true);
-      input.value = "";
+   <section class="page" id="page-plans">
+    <div class="page-heading"><div class="eyebrow">ASTRA MEMBERSHIPS</div>
+     <h1>Find your <span class="gradient">Astra plan.</span></h1>
+     <p>Plan concepts only. No payments are processed by this demo.</p></div>
+    <div class="grid">
+     <div class="card">
+      <span class="tag">GET STARTED</span><h3>Personal</h3>
+      <div class="price">Free <small>/ demo</small></div>
+      <p>For curious minds.</p>
+      <ul class="features"><li>Chat interface demo</li><li>Creative prompt previews</li><li>Basic tool dashboard</li></ul>
+      <button class="secondary full" onclick="go('chat')">Explore Astra</button>
+     </div>
+     <div class="card" style="border-color:#7771c8">
+      <span class="tag">FOR HOUSEHOLDS</span><h3>Family</h3>
+      <div class="price">Coming soon</div><p>For families learning together.</p>
+      <ul class="features"><li>Separate family profiles</li><li>Family account management</li><li>Age-appropriate controls</li></ul>
+      <button class="primary full" onclick="toast('Family accounts require secure account setup.')">Explore Family</button>
+     </div>
+     <div class="card">
+      <span class="tag">FOR TEAMS</span><h3>Business</h3>
+      <div class="price">Coming soon</div><p>For teams and organisations.</p>
+      <ul class="features"><li>Team workspaces</li><li>Member management</li><li>Business AI tools</li></ul>
+      <button class="secondary full" onclick="toast('Business plans require secure billing and team services.')">Explore Business</button>
+     </div>
+    </div>
+    <div class="note">Payments need a real payment provider, a secure backend, and a trusted adult or business owner to set up billing. This page does not charge anyone.</div>
+   </section>
 
-      const q = question.toLowerCase();
-      let answer;
+   <section class="page" id="page-login">
+    <div class="page-heading"><div class="eyebrow">WELCOME TO ASTRA</div>
+     <h1>Your universe <span class="gradient">awaits.</span></h1>
+     <p>This is a sign-in screen preview. Authentication is not connected yet.</p></div>
+    <div class="card" style="max-width:440px;margin:auto">
+     <h2>Welcome back ✦</h2>
+     <label for="email">EMAIL</label>
+     <input class="field" id="email" type="email" autocomplete="email" placeholder="you@example.com">
+     <label for="password">PASSWORD</label>
+     <input class="field" id="password" type="password" autocomplete="current-password" placeholder="Enter password">
+     <button class="primary full" onclick="toast('Login is a demo. Connect a secure authentication service first.')">Continue</button>
+     <p class="muted">Don't enter a real password here. This demo doesn't create or secure accounts.</p>
+    </div>
+   </section>
+  </div>
+  <footer>✦ ASTRA AI · Explore beyond the ordinary</footer>
+ </main>
+</div>
+<div id="toast" role="status"></div>
 
-      if (q.includes("hello") || q.includes("hi")) {
-        answer = "Hello! Welcome to Astra AI! 🚀";
-      } else if (q.includes("your name")) {
-        answer = "I'm Astra AI, your digital assistant!";
-      } else if (q.includes("space")) {
-        answer = "Space contains stars, planets, moons and galaxies!";
-      } else if (q.includes("html")) {
-        answer = "HTML is used to structure webpages.";
-      } else if (q.includes("help")) {
-        answer = "Sure! Tell me what you need help with.";
-      } else {
-        answer = "I'm still learning! This is my demo version. A real AI brain needs an AI service connected securely.";
-      }
+<script>
+const pages = ["chat","create","library","tools","plans","login"];
+let chatCount = 0;
+let toastTimer;
 
-      addMessage("Astra", answer, false);
-    }
-
-    function addMessage(name, text, isUser) {
-      const div = document.createElement("div");
-      div.className = "message" + (isUser ? " user" : "");
-
-      const bold = document.createElement("b");
-      bold.textContent = name + ": ";
-
-      div.appendChild(bold);
-      div.appendChild(document.createTextNode(text));
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    document.getElementById("send").addEventListener("click", reply);
-
-    input.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") reply();
-    });
-  </script>
+function go(name) {
+  pages.forEach(p => {
+    document.getElementById("page-"+p).classList.toggle("active",p===name);
+  });
+  document.querySelectorAll("[data-page]").forEach(b => {
+    b.classList.toggle("active",b.dataset.page===name);
+  });
+  if (name==="chat") setTimeout(()=>document.getElementById("question").focus(),50);
+}
+function toast(message) {
+  const el=document.getElementById("toast");
+  el.textContent=message;el.style.display="block";
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.style.display="none",3500);
+}
+function newChat() {
+  document.getElementById("messages").innerHTML="";
+  document.getElementById("welcome").style.display="block";
+  chatCount=0;go("chat");
+}
+function suggest(text) {
+  go("chat");
+  document.getElementById("question").value=text;
+  document.getElementById("question").focus();
+}
+function addMessage(role,text) {
+  const wrap=document.createElement("div");
+  wrap.className="msg "+(role==="You"?"user":"bot");
+  const title=document.createElement("strong");
+  title.textContent=role+": ";
+  wrap.appendChild(title);
+  wrap.appendChild(document.createTextNode(text));
+  document.getElementById("messages").appendChild(wrap);
+  wrap.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function sendMessage() {
+  const input=document.getElementById("question");
+  const q=input.value.trim();
+  if(!q)return;
+  input.value="";
+  document.getElementById("welcome").style.display="none";
+  addMessage("You",q);
+  chatCount++;
+  const s=q.toLowerCase();
+  let answer;
+  if(s.includes("hello")||s==="hi"||s.includes("hey"))
+    answer="Hey! ✨ Welcome to Astra AI. What would you like to explore today?";
+  else if(s.includes("your name")||s.includes("who are you"))
+    answer="I'm Astra AI, a demo assistant interface. My real AI engine still needs to be connected.";
+  else if(s.includes("black hole"))
+    answer="A black hole is a region of space with gravity so strong that even light cannot escape once it passes the event horizon.";
+  else if(s.includes("html"))
+    answer="HTML structures a webpage, CSS styles it, and JavaScript adds interactions. You're using all three in this Astra project!";
+  else if(s.includes("story")||s.includes("write"))
+    answer="Let's plan it! Choose a main character, give them a goal, introduce a problem, and finish with a surprising solution. A real connected AI can help write the full story.";
+  else if(s.includes("study")||s.includes("homework"))
+    answer="Let's break your topic into small steps. First, tell me the subject and the exact question you're working on.";
+  else if(s.includes("help"))
+    answer="I can show this demo's chat, image studio, tools, library, and plans. For answers to arbitrary questions, Astra needs a real AI model connected securely.";
+  else if(s.includes("space")||s.includes("planet"))
+    answer="Space is vast, containing stars, planets, moons, galaxies, gas, and dust. Our Solar System is part of the Milky Way galaxy.";
+  else
+    answer="Thanks for your question! This Astra version is a front-end demo, so I don't have a real AI brain connected yet. Once a secure AI API is added, I can answer a much wider range of questions.";
+  setTimeout(()=>addMessage("Astra",answer),200);
+  document.getElementById("history").textContent="Chat "+chatCount+" · Current session";
+}
+document.getElementById("question").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}
+});
+function createImage() {
+  const prompt=document.getElementById("prompt").value.trim();
+  if(!prompt){toast("Write an image prompt first!");return;}
+  const style=document.getElementById("style").value;
+  const art=document.getElementById("art");
+  const safe=document.createElement("p");
+  safe.textContent=prompt;
+  const sub=document.createElement("p");
+  sub.className="muted";sub.textContent=style+" · Concept preview";
+  const symbol=document.createElement("div");
+  symbol.className="art-symbol";symbol.textContent="✧";
+  art.replaceChildren(symbol,safe,sub);
+  art.style.background="radial-gradient(ellipse at 30% 30%,#514d9d,#252347 35%,#111522 75%)";
+  toast("Preview created! Connect an image API for real generated images.");
+}
+</script>
 </body>
 </html>
